@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue</title>
+	<style>
+	#vBind li{
+		list-style: none;
+	}
+	#vBind li a{
+		text-decoration: none;
+	}
+	#vBind li a.active{
+		color: red;
+	}
+
+	</style>
+</head>
+<body>
+<div id="app">
+	{{message}}
+	<br>
+	<input type="text" v-model="message">
+</div>
+<div id="vueIf">
+	<h2>vue-if</h2>
+	<h3 v-if="yes">yes</h3>
+	<h3 v-if="no">no</h3>
+	<h3 v-if="age>26">Age:{{age}}</h3>
+	<h3 v-if="name.indexOf('jack')>0">Name:{{name}}</h3>
+</div>
+
+<div id="vueShow">
+	<h2>vue-show</h2>
+	<h3 v-show="yes">yes</h3>
+	<h3 v-show="age>26">Age:{{age}}</h3>
+	<h3 v-show="yes">yes</h3>
+</div>
+
+<div id="vueElse">
+	<h2>vue-else</h2>
+	<h3 v-if="age>26">Age:{{age}}</h3>
+	<h3 v-else>Name:{{name}}</h3>
+	<h3>----------分割线-----------</h3>
+	<h3 v-if="name.indexOf('jack')>0">Name:{{name}}</h3>
+	<h3 v-else>Sex:{{sex}}</h3>
+</div>
+
+<div id="vueFor">
+	<h2>vue-for</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>name</th>
+				<th>age</th>
+				<th>sex</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="person in people">
+				<td>{{person.name}}</td>
+				<td>{{person.age}}</td>
+				<td>{{person.sex}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="vBind">
+	<h2>v-bind</h2>
+	<ul class="pagination">
+        <li v-for="n in pageCount">
+            <a href="" v-bind:class="activeNumber===n?'active':''">{{n}}</a>
+         </li>
+    </ul>
+</div>
+
+<div id="vOn">
+	<h2>v-on</h2>
+	<p><input type="text" v-model="message"></p>
+	<p><button v-on:click="greet">Greet</button></p>
+	<p><button v-on:click="say('Hi')">Hi</button></p>
+</div>
+
+
+</body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script>
+	var exampleDate={
+		message:'hello world'
+	}
+
+	new Vue({
+		el:'#app',
+		data:exampleDate
+	})
+
+	var vi=new Vue({
+		el:"#vueIf",
+		data:{
+			yes:true,
+			no:false,
+			age:28,
+			name:"wangjack"
+		}
+	})
+
+	var vs=new Vue({
+		el:'#vueShow',
+		data:{
+			yes:true,
+			age:28
+		}
+
+	})
+
+	var ve=new Vue({
+		el:"#vueElse",
+		data:{
+			age:28,
+			name:"jackchen",
+			sex:"male"
+		}
+
+	})
+
+	var vf=new Vue({
+		el:"#vueFor",
+		data:{
+			people:[{
+				name:"jack",
+				age:24,
+				sex:"男"
+			},{
+				name:"jamie",
+				age:26,
+				sex:"男"
+			},{
+				name:"lun",
+				age:26,
+				sex:"女"
+			}]
+		}
+	})
+
+	var vb=new Vue({
+		el:"#vBind",
+		data:{
+			activeNumber:1,
+            pageCount: 10
+		}
+	})
+
+	var vo=new Vue({
+		el:"#vOn",
+		data:{
+			message:"Hello,Vue.js"
+		},
+		// 在methods中定义方法
+		methods:{
+			greet:function(){
+				// 方法内this指向vm
+				alert(this.message)
+			},
+		say:function(msg){
+			alert(msg)
+		}
+		}
+	})
+
+</script>
+</html>
+
+<!-- MVVM框架：
+
+1.定义view；
+2.定义model；
+3.创建一个Vue实例或"ViewModel"，它用于连接View和Model；
+
+
+vue.js常用指令：
+v-model(双向数据绑定)；
+v-if(条件渲染指令，它根据表达式的真假来删除和插入元素)
+
+v-if:
+	基本语法：v-if="expression"
+	expression是一个返回bool值的表达式，表达式可以是一个bool属性，也可以是一个返回bool的运算式。 
+
+v-show:
+	也是条件渲染指令，和v-if指令不同的是，使用v-show指令的元素始终会被渲染到HTML，它只是简单地为元素设置CSS的style属性。
+
+v-else:
+	可以用v-else指令为v-if或v-show添加一个“else块”。v-else元素必须立即跟在v-if或v-show元素的后面——否则它不能被识别。
+	v-else元素是否渲染在HTML中，取决于前面使用的是v-if还是v-show指令。
+
+v-for:
+	v-for指令基于一个数组渲染一个列表，它和JavaScript的遍历语法相似：
+	v-for="item in items"
+	items是一个数组，item是当前被遍历的数组元素。
+
+v-bind:
+	v-bind指令可以在其名称后面带一个参数，中间放一个冒号隔开，这个参数通常是HTML元素的特性（attribute），例如：v-bind:class
+	v-bind:argument="expression"
+
+	如：v-bind:class="active"
+
+v-on:
+	v-on指令用于给监听DOM事件，它的用语法和v-bind是类似的，例如监听<a>元素的点击事件：
+	<a v-on:click="doSomething">
+	有两种形式调用方法：绑定一个方法（让事件指向方法的引用），或者使用内联语句。
+
+v-bind和v-on的缩写
+Vue.js为最常用的两个指令v-bind和v-on提供了缩写方式。v-bind指令可以缩写为一个冒号，v-on指令可以缩写为@符号。
+
+<完整语法>
+<a href="javascripit:void(0)" v-bind:class="activeNumber === n + 1 ? 'active' : ''">{{ n + 1 }}</a>
+<缩写语法>
+<a href="javascripit:void(0)" :class="activeNumber=== n + 1 ? 'active' : ''">{{ n + 1 }}</a>
+
+<完整语法>
+<button v-on:click="greet">Greet</button>
+<缩写语法>
+<button @click="greet">Greet</button>
+
+
+-->
