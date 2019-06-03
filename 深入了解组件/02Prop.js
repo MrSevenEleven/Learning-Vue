@@ -171,14 +171,3 @@
         // 有了 inheritAttrs: false 和 $attrs，你就可以手动决定这些特性会被赋予哪个元素。
 
 
-
-
-
-
-    Vue.component("blog-past",{
-        props:["postTitle"],
-        template:"<h3>{{postTitle}}</h3>",
-    });
-
-
-
